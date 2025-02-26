@@ -29,14 +29,17 @@ def show_task():
     
     with open(json_file,"r") as f:
         data=json.load(f)
-        keys=data.keys()
+    
+
 
     task_table = table.Table(title="To-Do-List")
-    task_table.add_column("Added",justify="center", style="cyan", no_wrap=True)
-    task_table.add_column("Tasks",justify="center",style="magenta")
-    task_table.add_column("Deadline",justify="center",style="red")
+    task_table.add_column("Tasks",justify="center", style="cyan", no_wrap=True)
+    task_table.add_column("Deadline",justify="center",style="magenta")
+    task_table.add_column("Added Time",justify="center",style="red")
     task_table.add_column("Category",justify="center")
-    task_table.add_row(data["Task"], data["Deadline"], data["Added Time"], data["Category"])
+    task_table.add_column("Status",justify="center")
+    for i,j in enumerate(data):
+        task_table.add_row(j["Task"], j["Deadline"], j["Added Time"], j["Category"],j["Status"])
     
 
     console = Console()

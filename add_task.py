@@ -2,6 +2,10 @@ import json
 import questionary
 import sys
 from datetime import datetime
+from view_task import view_task
+import os
+
+user_list={"Task":"","Deadline":"","Added Time":"","Category":"","Status":""}
 
 def add_task():
     
@@ -17,25 +21,52 @@ def add_task():
 
         
 def task_input(ctgry):
-    user_list={"Task":"","Deadline":"","Added Time":"","Category":""}
+    task_data=[]
+    if os.path.exists("task.json"):
+        with open("task.json","r") as f:
+            try:
+                task_data=json.load(f)
+                if not isinstance(task_data,list):
+                    task_data=[]
+            except json.JSONDecodeError:
+                task_data=[]
 
-    for i in user_list.keys():
-        if i=="Task":
-            user_list[i]=input("Please add your task explanition: ")
-        elif i=="Deadline":
-            user_list[i]=input("Please add your deadline: ")
-        elif i=="Added Time":
-            user_list[i]=datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        elif i=="Category":
-            user_list[i]=ctgry
-    
-    list_to_json(user_list)
+    while True:
+        user_list={
+            "Task":input("Please add your task explanation: "),
+            "Deadline": datetime.strptime(input("Please add your deadline (YYYY-MM-DD): "), "%Y-%m-%d").strftime("%Y-%m-%d"),
+            "Added Time":datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "Category":ctgry,
+            "Status":"Pending"
+        }
+        task_data.append(user_list)
+        ans=input("Enter Q to quit:")
+        if ans.lower()=='q':
+            break
+
+    list_to_json(task_data)
 
 
-def list_to_json(user_list):
-    json_object=json.dumps(user_list,indent=4)
+def list_to_json(task_data):
     with open("task.json","w") as f:
-        json.dump(user_list, f, indent=4)
+        json.dump(task_data,f,indent=4)
+
+def update_task():
+
+    choice=questionary.select("Update Task Status: ",choices=["Pending","Done"]).ask()
+
+    if choice=="Pending":
+        user_list["Status"]="Pending"
+    elif choice=="Done":
+        user_list["Status"]="Done"
+
+def remove_task():
+    json_file_path=view_task()
+    if json_file_path:
+        os.remove(json_file_path)
+        print(f"{json_file_path} has been removed.")
+
+    
 
 
 

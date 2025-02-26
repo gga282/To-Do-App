@@ -1,7 +1,8 @@
 import questionary 
-from add_task import add_task
+from add_task import add_task,update_task,remove_task
 from view_task import show_task
-import os
+from settings import menu_settings
+import os,sys
 
 def main_menu():
     print("Welcome to To Do App")
@@ -12,15 +13,16 @@ def main_menu():
     if choice=="Add a Task":
         add_task()
     elif choice=="View Tasks":
-        print("Calling show_task()...")
         show_task()
-    else:
-        print("Error")
-    #elif choice=="Mark a Task as Done":
-
-    #elif choice=="Remove Task From the List":
-    
-    #elif choice=="Settings":
+    elif choice=="Mark a Task as Done":
+        update_task()
+    elif choice=="Remove Task From the List":
+        remove_task()
+    elif choice=="Settings":
+        menu_settings()
+    elif choice=="Exit":
+        sys.exit(1)   
+        
         
 
     #elif choice=="Show the list":
