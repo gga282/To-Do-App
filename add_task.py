@@ -66,6 +66,15 @@ def remove_task():
         os.remove(json_file_path)
         print(f"{json_file_path} has been removed.")
 
+def check_task_deadline(data): #json file
+    deadline_date=datetime.strptime(data["Deadline"],"%Y-%m-%d")
+    today=datetime.today().date()
+    if deadline_date<today:
+        print(f"{data["Task"]} is due.")
+        data["Status"]="Overdue!!!"
+    else:
+        print(f"You have {(deadline_date-today).days} days left to complete '{data['Task']}'.")
+
     
 
 
